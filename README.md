@@ -26,8 +26,11 @@ parsanol-shape tree -> Model implementations
 
 Like [asciichem-model](https://github.com/asciichem/asciichem-model),
 this is a **contract repository**: implementations (asciichem-ruby,
-asciichem-ts, asciichem-py, asciichem-rs) vendor the grammar and
-artifact from tags. Nothing here depends on an implementation; the
+asciichem-ts, asciichem-py, asciichem-rs) vendor the grammar and the
+COMMITTED artifact (`grammar/asciichem.json`, checksummed in
+[`grammar/CHECKSUMS.md`](grammar/CHECKSUMS.md)) from tags — verify
+vendored copies against those hashes in CI. Nothing here depends on
+an implementation; the
 [shared conformance corpus](https://github.com/asciichem/asciichem-tests)
 stays the behavioural arbiter.
 
