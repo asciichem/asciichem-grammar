@@ -1,4 +1,4 @@
-# asciichem-parg
+# asciichem-grammar
 
 The **AsciiChem grammar as a PARG text contract** — the single source
 of truth for the AsciiChem syntax, expressed in

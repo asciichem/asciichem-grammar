@@ -12,7 +12,7 @@ fixtures_dir = ARGV[0] || "/Users/mulgogi/src/asciichem/asciichem-tests/corpus/f
 src = File.read(File.join(__dir__, "..", "grammar/asciichem.parg"))
 doc = Parsanol::PARG::Frontend.parse(src)
 compiled = Parsanol::PARG::Compiler.compile(doc)
-artifact_path = "/tmp/asciichem-parg-parity.json"
+artifact_path = "/tmp/asciichem-grammar-parity.json"
 File.write(artifact_path, JSON.generate(compiled.envelope))
 artifact = Parsanol::PARG::Artifact.load(artifact_path)
 
