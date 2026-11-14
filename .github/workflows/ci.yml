@@ -9,7 +9,10 @@ env:
   # Pinned so grammar acceptance and corpus parity are reproducible;
   # bump deliberately with a re-run of the suites.
   PARSANOL_REF: 9230b7e
-  PUBID_GRAMMAR_REF: 836ae8a
+  # Pinned to the pre-drift era: the 9230b7e parser cannot read the
+  # newer self-host artifacts (their compiler grammar carries the
+  # "edition" construct). Bump BOTH refs together, deliberately.
+  PUBID_GRAMMAR_REF: 069ef6c2f5f3fba84cd69f6ac4c2635d20f8f0a4
 
 jobs:
   grammar:
