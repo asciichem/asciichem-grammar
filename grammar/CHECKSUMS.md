@@ -6,7 +6,26 @@ compiled artifact every runtime vendors. Verify your vendored copy
 against this file in CI; a mismatch means you drifted from the
 contract.
 
-## grammar-v0.4.0 (the current pin)
+## grammar-v0.5.0 (the current pin)
+
+| File | sha256 |
+|---|---|
+| `asciichem.parg` (the PARG text contract) | `7bd31dd8b31e514b9b2b91f459323ddadee30bbd773d70baa8bd6eb527191529` |
+| `asciichem.json` (the compiled artifact) | `88024d6ec31e061011dc255106cb205ed9877105d8e691e5a56abbb7cb1d7e9f` |
+
+Artifact header: grammar `AsciiChemCore`, artifact version `0.5.0`,
+shape `parsanol-tree/v2`, binding_version 1.
+
+**The v0.5.0 change (model#16, option B — the grammar narrows):**
+`known_annotation_type` drops `iupac` and `cid`, and `property_name`
+(the lowercase catch-all that would otherwise re-admit them as
+property annotations) gains the `!"iupac" !"cid"` exclusion
+predicates — so `@iupac(...)` and `@cid(...)` REJECT at parse time
+across all runtimes. Corpus parity verified: 275 fixtures, 0
+mismatches under the narrowed grammar (including the two new reject
+fixtures). `chebi` remains (schema-valid, validator-less).
+
+## grammar-v0.4.0 (superseded)
 
 | File | sha256 |
 |---|---|
