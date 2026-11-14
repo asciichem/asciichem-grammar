@@ -23,7 +23,8 @@ jobs:
         run: git clone https://github.com/parsanol/parsanol-ruby ../parsanol-ruby
       - run: git -C ../parsanol-ruby checkout "$PARSANOL_REF"
       - name: Clone pubid-grammar (selfhost artifact, per upstream convention)
-        run: git clone --depth 1 https://github.com/pubid/pubid-grammar ../pubid-grammar
+        run: git clone https://github.com/pubid/pubid-grammar ../pubid-grammar
+      - run: git -C ../pubid-grammar checkout "$PUBID_GRAMMAR_REF"
       - name: Clone asciichem-tests (conformance corpus)
         uses: actions/checkout@v7
         with:
