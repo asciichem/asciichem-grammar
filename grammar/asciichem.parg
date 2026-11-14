@@ -1,4 +1,4 @@
-grammar AsciiChemCore version "0.4.0" {
+grammar AsciiChemCore version "0.5.0" {
   ## The AsciiChem syntax — full grammar, DSL-shaped captures
   ## (P1b, asciichem-ruby#96). Capture names and nesting mirror
   ## GrammarRules exactly so the PARG tree adapts to the same shape
@@ -184,9 +184,9 @@ grammar AsciiChemCore version "0.4.0" {
   ## any other lowercase word becomes a property.
   simple_annotation = "@" ( ( known_annotation_type / property_name ) as ann_type "(" "\"" ( until "\"" ) as ann_value ( "\"" ) as ann_value_close ( ")" ) as ann_close )
 
-  known_annotation_type = ( "name" / "title" / "formula" / "label" / "inchi" / "smiles" / "cas" / "iupac" / "cid" / "chebi" )
+  known_annotation_type = ( "name" / "title" / "formula" / "label" / "inchi" / "smiles" / "cas" / "chebi" )
 
-  property_name = 1*( %x61-7A )
+  property_name = !"iupac" !"cid" 1*( %x61-7A )
 
   test formula {
     accept "H_2O"
