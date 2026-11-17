@@ -1,4 +1,4 @@
-grammar AsciiChemCore version "0.6.0" {
+grammar AsciiChemCore version "0.7.0" {
   ## The AsciiChem syntax — full grammar, DSL-shaped captures
   ## (P1b, asciichem-ruby#96). Capture names and nesting mirror
   ## GrammarRules exactly so the PARG tree adapts to the same shape
@@ -145,7 +145,7 @@ grammar AsciiChemCore version "0.6.0" {
 
   ## Bonds capture under their kind name (transform contract), longest
   ## first so `##` beats `#`; `->` is reserved for reactions.
-  bond = ( "/" as direction_up ) / ( "\\" as direction_down ) / ( "##" as quadruple ) / ( ">-" as wedge ) / ( "-<" as hash ) / ( "~>" as dative ) / ( "~~" as wavy ) / ( "#" as triple ) / ( "=" as double ) / ( "-" as single )
+  bond = ( "/" as direction_up ) / ( "\\" as direction_down ) / ( "##" as quadruple ) / ( ">-" as wedge ) / ( "-<" as hash ) / ( "~>" as dative ) / ( "~~" as wavy ) / ( "#" as triple ) / ( "=" as double ) / ( ":" as aromatic ) / ( "-" as single )
 
   # -- beyond-formulas constructs -----------------------------------------
 
@@ -245,5 +245,7 @@ grammar AsciiChemCore version "0.6.0" {
     reject "@name(\"x\") H_2O"
     reject "@molfile(\"CCO\")"
     reject "@smiles("
+    accept "C1:C:C:C:C:C1"
+    accept "C1:C:N:C=C1"
   }
 }

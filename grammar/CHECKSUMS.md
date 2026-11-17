@@ -6,7 +6,25 @@ compiled artifact every runtime vendors. Verify your vendored copy
 against this file in CI; a mismatch means you drifted from the
 contract.
 
-## grammar-v0.6.0 (the current pin)
+## grammar-v0.7.0 (the current pin)
+
+| File | sha256 |
+|---|---|
+| `asciichem.parg` (the PARG text contract) | `d40377f7318f4619de9d84bb381668689855ce265fa7b5b31affee93ea061b09` |
+| `asciichem.json` (the compiled artifact) | `0d163020614f170680ded929a3b4a3490dedc1c2101035747dd3c5668c167229` |
+
+Artifact header: grammar `AsciiChemCore`, artifact version `0.7.0`,
+shape `parsanol-tree/v2`, binding_version 1.
+
+**The v0.7.0 change (asciichem-ruby#188, part 2 — the aromatic text
+bond):** the `bond` rule gains `":" as aromatic` (ahead of the plain
+dash) — the text grammar now parses the aromatic-bond spelling the
+writers emit for SMILES/molfile-ingested aromatic rings. Before this,
+`@smiles("c1ccccc1")` canonicalised to `C1:C:C:C:C:C1`, which the text
+grammar itself rejected — the writer-only bond form. The inline suite
+carries the accepts. The lint baseline is unchanged (29 advisories).
+
+## grammar-v0.6.0 (superseded)
 
 | File | sha256 |
 |---|---|
