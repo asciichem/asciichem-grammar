@@ -65,7 +65,22 @@ grammar AsciiChemCore version "0.7.0" {
   condition = ( "[" ( until "]" ) as text ( "]" ) as condition_close ) as condition
 
   ## A molecule: stereochemistry prefix, optional coefficient, units.
-  molecule = ( [ stereo_prefix ] [ coefficient ] ( 1*( unit / bond ) ) as units ) as molecule
+  ## The two molecule rules resolve the aromatic-colon / lone-pair
+  ## colon ambiguity by POSITION:
+  ## - TOP LEVEL (`molecule`): after the first unit the repetition
+  ##   tries the BOND before the unit — between units the bond owns
+  ##   `:` (the aromatic text bond, v0.7.0). The leading-colon
+  ##   lone-pair form is a molecule-START spelling (the corpus
+  ##   carries only ::O / ::N. at position 0).
+  ## - INSIDE GROUPS (`branch_molecule` via group_unit): unit-first,
+  ##   because a group's nested molecule may START with a bond —
+  ##   `C(=O)` is a group whose leading `=O` continues from the
+  ##   pre-group atom, and unit-first keeps that branch form intact
+  ##   (the colon inside groups stays lone-pairs-biased; ingested
+  ##   structures never place aromatic bonds inside groups).
+  molecule = ( [ stereo_prefix ] [ coefficient ] ( unit 0*( bond / unit ) ) as units ) as molecule
+
+  branch_molecule = ( [ stereo_prefix ] [ coefficient ] ( 1*( unit / bond ) ) as units ) as molecule
 
   ## `(R)-` style prefixes; a/b are the alpha/beta shorthand.
   stereo_prefix = "(" ( stereo_letter ) as stereo ")" "-"
@@ -93,7 +108,7 @@ grammar AsciiChemCore version "0.7.0" {
 
   ## Inside a group: reactions, molecules, electron configs, embedded
   ## math and quoted text recurse (DSL group_node set).
-  group_unit = reaction / electron_config / molecule / group / embedded_math / ( "\"" until "\"" "\"" ) as group_text_run
+  group_unit = reaction / electron_config / branch_molecule / group / embedded_math / ( "\"" until "\"" "\"" ) as group_text_run
 
   ## Hydrogen: bare digits after H are subscripts (H cannot ring-
   ## close), but H must not steal the H of He, Hf...

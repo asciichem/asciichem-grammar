@@ -10,8 +10,8 @@ contract.
 
 | File | sha256 |
 |---|---|
-| `asciichem.parg` (the PARG text contract) | `d40377f7318f4619de9d84bb381668689855ce265fa7b5b31affee93ea061b09` |
-| `asciichem.json` (the compiled artifact) | `0d163020614f170680ded929a3b4a3490dedc1c2101035747dd3c5668c167229` |
+| `asciichem.parg` (the PARG text contract) | `6f2af599a30f2bec15f698ca334fa1ea60572dbb30c6d9b74e42eae00537d8d7` |
+| `asciichem.json` (the compiled artifact) | `c86609bcb39ea15896aa712a9da9be671e6bb4391ca7e11280643fb0a00b511d` |
 
 Artifact header: grammar `AsciiChemCore`, artifact version `0.7.0`,
 shape `parsanol-tree/v2`, binding_version 1.
@@ -21,8 +21,21 @@ bond):** the `bond` rule gains `":" as aromatic` (ahead of the plain
 dash) — the text grammar now parses the aromatic-bond spelling the
 writers emit for SMILES/molfile-ingested aromatic rings. Before this,
 `@smiles("c1ccccc1")` canonicalised to `C1:C:C:C:C:C1`, which the text
-grammar itself rejected — the writer-only bond form. The inline suite
-carries the accepts. The lint baseline is unchanged (29 advisories).
+grammar itself rejected — the writer-only bond form.
+
+**The colon ambiguity resolves by POSITION:** the aromatic colon and
+the Lewis lone-pair colon are locally indistinguishable, so the
+molecule rule splits in two. The TOP-level molecule (`molecule`) is
+bond-first after its first unit — between units the bond owns `:`. The
+group-nested molecule (`branch_molecule`, via group_unit) stays
+unit-first, because a group's nested molecule may START with a bond:
+`C(=O)` is a group whose leading `=O` continues from the pre-group
+atom — the text branch form — and unit-first keeps it intact. The
+leading-colon lone-pair spelling is a molecule-start form (the corpus
+carries only ::O / ::N. at position 0); ingested structures never
+place aromatic bonds inside groups. The inline suite carries the
+aromatic accepts AND the bare-SMILES branch accepts that pinned the
+group form. The lint baseline is unchanged (29 advisories).
 
 ## grammar-v0.6.0 (superseded)
 
