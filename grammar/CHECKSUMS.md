@@ -6,7 +6,31 @@ compiled artifact every runtime vendors. Verify your vendored copy
 against this file in CI; a mismatch means you drifted from the
 contract.
 
-## grammar-v0.5.0 (the current pin)
+## grammar-v0.6.0 (the current pin)
+
+| File | sha256 |
+|---|---|
+| `asciichem.parg` (the PARG text contract) | `fe6eb0c21a0427095c45927f0557e8bdaeb40d5f84bec96e5d55731a19460a74` |
+| `asciichem.json` (the compiled artifact) | `bc14145fa033472cc18363a3ca0ebd512e262d3a43c9329a2dd0e9cc34d9a068` |
+
+Artifact header: grammar `AsciiChemCore`, artifact version `0.6.0`,
+shape `parsanol-tree/v2`, binding_version 1.
+
+**The v0.6.0 change (asciichem-rs#45 — the structure reference):**
+`formula_node` gains the leading `structure_reference` alternative —
+`@smiles("...")` standing alone is an ingest edge, the same posture
+as the CLI's `-i smiles` input mode: the annotation carries the
+structure in, the model is the molecule the runtime's own SMILES
+reader produces. The attached form (`molecule @smiles("...")`) is
+unchanged — there it stays the identifier annotation it has always
+been. `ref_type` is captured so later sources (`@molfile`, `@inchi`)
+join as data, not grammar; v1 carries `smiles` only and the grammar
+hard-codes the word (a standalone `@molfile(...)` rejects at parse).
+The inline suite carries the accepts and the rejects. The lint
+baseline is unchanged (29 order-dependence advisories, the
+classification is ordered choice by design).
+
+## grammar-v0.5.0 (superseded)
 
 | File | sha256 |
 |---|---|

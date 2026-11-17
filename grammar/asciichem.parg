@@ -1,4 +1,4 @@
-grammar AsciiChemCore version "0.5.0" {
+grammar AsciiChemCore version "0.6.0" {
   ## The AsciiChem syntax — full grammar, DSL-shaped captures
   ## (P1b, asciichem-ruby#96). Capture names and nesting mirror
   ## GrammarRules exactly so the PARG tree adapts to the same shape
@@ -25,9 +25,21 @@ grammar AsciiChemCore version "0.5.0" {
 
   ws = ( " " / %x09 / %x0A / %x0D )
 
-  ## Top-level nodes, DSL ordered-choice order (cascade before plain
-  ## reaction, annotations before bare molecule).
-  formula_node = cascade / reaction / electron_config / crystal / spectrum / calculation / zmatrix / mechanism / annotated_molecule / molecule / embedded_math / ( "\"" until "\"" "\"" ) as text_run
+  ## Top-level nodes, DSL ordered-choice order (the structure
+  ## reference before everything — a leading `@` cannot start any
+  ## other node — then cascade before plain reaction, annotations
+  ## before bare molecule).
+  formula_node = structure_reference / cascade / reaction / electron_config / crystal / spectrum / calculation / zmatrix / mechanism / annotated_molecule / molecule / embedded_math / ( "\"" until "\"" "\"" ) as text_run
+
+  ## The standalone structure reference (asciichem-rs#45): an ingest
+  ## edge, the same posture as the CLI's `-i smiles` input mode — the
+  ## annotation carries the structure in, the model is the molecule
+  ## the runtime's own SMILES reader produces. The attached form
+  ## (`molecule @smiles("...")`) is unchanged: there it stays the
+  ## identifier annotation it has always been. v1 carries `smiles`
+  ## only; `ref_type` is captured so later sources join as data, not
+  ## grammar.
+  structure_reference = ( "@" ( "smiles" ) as ref_type "(" "\"" ( until "\"" ) as ref_value "\"" ( ")" ) as ref_close ) as structure_reference
 
   # -- reactions ---------------------------------------------------------
 
@@ -220,6 +232,9 @@ grammar AsciiChemCore version "0.5.0" {
     accept "H_2O @meta(\"source\",\"handbook\")"
     accept "  H_2O  "
     accept "C@(10,20)@R@m(2)@t(\"C1\")"
+    accept "@smiles(\"CCO\")"
+    accept "@smiles(\"c1ccccc1\")"
+    accept "@smiles(\"CCO\") H_2O"
     reject ""
     reject "???"
     reject "H_"
@@ -228,5 +243,7 @@ grammar AsciiChemCore version "0.5.0" {
     reject "crystal[NaCl"
     reject "zmatrix{ C1 "
     reject "@name(\"x\") H_2O"
+    reject "@molfile(\"CCO\")"
+    reject "@smiles("
   }
 }
