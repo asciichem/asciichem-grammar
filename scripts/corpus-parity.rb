@@ -18,11 +18,25 @@ artifact = Parsanol::PARG::Artifact.load(artifact_path)
 
 total = 0
 mismatches = []
+# Runtime-level rejects: fixtures whose expectation lives at the
+# runtime layer, beyond the grammar. The PARG carries @smiles("...")
+# payloads as opaque quoted data (validity belongs to the runtime's
+# SMILES reader), so a payload-rejecting fixture rejects at runtime
+# while the grammar alone accepts it. The runtimes' corpus gates
+# enforce those fixtures; the GRAMMAR parity harness skips exactly
+# the ids listed here. When a runtime gains the capability (e.g.
+# dot components, chemomer#131), the fixture flips and the entry
+# is removed.
+RUNTIME_LEVEL_REJECTS = %w[
+  structure-reference/dot-components
+].freeze
+
 Dir.glob(File.join(fixtures_dir, "*.json")).sort.each do |file|
   data = JSON.parse(File.read(file))
   items = data.is_a?(Array) ? data : [data]
   items.flatten.each do |fixture|
     next unless fixture.is_a?(Hash) && fixture["input"] && fixture.key?("parses")
+    next if RUNTIME_LEVEL_REJECTS.include?(fixture["id"])
 
     total += 1
     input = fixture["input"]
