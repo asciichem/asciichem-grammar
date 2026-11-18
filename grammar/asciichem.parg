@@ -1,4 +1,4 @@
-grammar AsciiChemCore version "0.6.0" {
+grammar AsciiChemCore version "0.7.0" {
   ## The AsciiChem syntax — full grammar, DSL-shaped captures
   ## (P1b, asciichem-ruby#96). Capture names and nesting mirror
   ## GrammarRules exactly so the PARG tree adapts to the same shape
@@ -64,8 +64,16 @@ grammar AsciiChemCore version "0.6.0" {
 
   condition = ( "[" ( until "]" ) as text ( "]" ) as condition_close ) as condition
 
-  ## A molecule: stereochemistry prefix, optional coefficient, units.
-  molecule = ( [ stereo_prefix ] [ coefficient ] ( 1*( unit / bond ) ) as units ) as molecule
+  ## A molecule: stereochemistry prefix, optional coefficient, units,
+  ## optional trailing state mark. The state mark is the mhchem phase
+  ## glyph: `AgCl v` (precipitate, typeset ↓) and `AgCl ^` (gas, ↑).
+  ## It is whitespace-separated and lowercase-only so it can never
+  ## collide with a vanadium atom (uppercase `V`) or — for `^` — with
+  ## an isotope prefix or a charge superscript, which bind to the
+  ## adjacent atom WITHOUT whitespace (`AgCl^14C`, `Ca^2+`). A tight
+  ## `^2+`/`^14C` is therefore still the atom suffix; a separated
+  ## ` ^` is the gas mark.
+  molecule = ( [ stereo_prefix ] [ coefficient ] ( 1*( unit / bond ) ) as units [ 1*( ws ) ( "v" / "^" ) as state ] ) as molecule
 
   ## `(R)-` style prefixes; a/b are the alpha/beta shorthand.
   stereo_prefix = "(" ( stereo_letter ) as stereo ")" "-"
@@ -231,6 +239,10 @@ grammar AsciiChemCore version "0.6.0" {
     accept "H_2O @name(\"water\") @cas(\"7732-18-5\")"
     accept "H_2O @meta(\"source\",\"handbook\")"
     accept "  H_2O  "
+    accept "AgCl v"
+    accept "AgCl ^"
+    accept "Ag^+ + Cl^- -> AgCl v"
+    accept "CaCO_3 ->[heat] CaO + CO_2 ^"
     accept "C@(10,20)@R@m(2)@t(\"C1\")"
     accept "@smiles(\"CCO\")"
     accept "@smiles(\"c1ccccc1\")"
@@ -245,5 +257,6 @@ grammar AsciiChemCore version "0.6.0" {
     reject "@name(\"x\") H_2O"
     reject "@molfile(\"CCO\")"
     reject "@smiles("
+    reject "Ca ^2+"
   }
 }

@@ -6,7 +6,34 @@ compiled artifact every runtime vendors. Verify your vendored copy
 against this file in CI; a mismatch means you drifted from the
 contract.
 
-## grammar-v0.6.0 (the current pin)
+## grammar-v0.7.0 (the current pin)
+
+| File | sha256 |
+|---|---|
+| `asciichem.parg` (the PARG text contract) | `56e560fa869b330d5fcef1d5fb435e8884e0b89e2b388d1aa97b2e3aec6048d8` |
+| `asciichem.json` (the compiled artifact) | `7c1d337555b424dfd8d33a5f021b0553cb2e54ff7af62560ea7e571243016a95` |
+
+Artifact header: grammar `AsciiChemCore`, artifact version `0.7.0`,
+shape `parsanol-tree/v2`, binding_version 1.
+
+**The v0.7.0 change (asciichem-ruby#199 — the state markers):**
+`molecule` gains an optional trailing `state` capture — the mhchem
+phase glyph. `AgCl v` is the precipitate mark (typeset ↓), `AgCl ^`
+the gas mark (↑). The mark is whitespace-separated and lowercase-only
+so it cannot collide with a vanadium atom (uppercase `V`), and for `^`
+the tight forms keep their existing meaning: `AgCl^14C` (isotope
+prefix) and `Ca^2+` (charge superscript) bind to the adjacent atom
+without whitespace, while a separated ` ^` is the gas mark — `Ca ^2+`
+rejects at parse. Renderers type the glyph; the model carries
+`precipitate` / `gas`. The inline suite carries the accepts and the
+new reject. Corpus parity: 284 fixtures, the single pre-existing
+`structure-reference/dot-components` harness mismatch (the PARG sees
+the quoted payload opaquely; the reject is runtime-level, tracked by
+chemomer#131) — zero new mismatches. The lint baseline is unchanged
+(29 order-dependence advisories, the classification is ordered choice
+by design).
+
+## grammar-v0.6.0 (superseded)
 
 | File | sha256 |
 |---|---|
