@@ -29,7 +29,7 @@ grammar AsciiChemCore version "0.8.0" {
   ## reference before everything — a leading `@` cannot start any
   ## other node — then cascade before plain reaction, annotations
   ## before bare molecule).
-  formula_node = structure_reference / cascade / reaction / electron_config / crystal / spectrum / calculation / zmatrix / mechanism / annotated_molecule / molecule / embedded_math / ( "\"" until "\"" "\"" ) as text_run
+  formula_node = structure_reference / cascade / reaction / electron_config / crystal / spectrum / calculation / zmatrix / mechanism / annotated_molecule / adduct / molecule / embedded_math / ( "\"" until "\"" "\"" ) as text_run
 
   ## The standalone structure reference (asciichem-rs#45): an ingest
   ## edge, the same posture as the CLI's `-i smiles` input mode — the
@@ -63,6 +63,15 @@ grammar AsciiChemCore version "0.8.0" {
   arrow_kind = ( "<=>" / "<->" / "->" / "<-" )
 
   condition = ( "[" ( until "]" ) as text ( "]" ) as condition_close ) as condition
+
+  ## The adduct: the middle-dot connective between molecules at the
+  ## FORMULA level (mhchem's A·B — CuSO4 . 5H2O hydrates). The ASCII
+  ## spelling is the period WITH whitespace on both sides (or the
+  ## literal middle dot); the UNspaced period stays radical-suffix
+  ## territory (Cl. has one radical electron), so all three readings
+  ## resolve by construction. N-ary, not a binary connective — the
+  ## components map one-to-one onto the InChI multi-component layers.
+  adduct = ( molecule ( 1*( ( [ 1*( ws ) ] ( "." / "·" ) [ 1*( ws ) ] ) as dot molecule ) ) as components ) as adduct
 
   ## A molecule: stereochemistry prefix, optional coefficient, units,
   ## optional trailing state mark. The state mark is the mhchem phase
@@ -248,6 +257,9 @@ grammar AsciiChemCore version "0.8.0" {
     accept "  H_2O  "
     accept "AgCl v"
     accept "AgCl ^"
+    accept "CuSO4 . 5H2O"
+    accept "CuSO4 · 5H2O"
+    accept "NaCl . KCl . CaCl2"
     accept "Ag^+ + Cl^- -> AgCl v"
     accept "CaCO_3 ->[heat] CaO + CO_2 ^"
     accept "C@(10,20)@R@m(2)@t(\"C1\")"
