@@ -1,4 +1,4 @@
-grammar AsciiChemCore version "0.7.0" {
+grammar AsciiChemCore version "0.8.0" {
   ## The AsciiChem syntax — full grammar, DSL-shaped captures
   ## (P1b, asciichem-ruby#96). Capture names and nesting mirror
   ## GrammarRules exactly so the PARG tree adapts to the same shape
@@ -89,8 +89,13 @@ grammar AsciiChemCore version "0.7.0" {
   unit = prefixed_atom / group / hydrogen_atom / plain_atom
 
   ## Prefix isotope: ^14C or _14C — the marker binds to the atom, the
-  ## core semantic fix over AsciiMath. Captured with the marker.
-  prefixed_atom = ( [ lewis_prefix ] ( ( "^" / "_" ) 1*(%x30-39) ) as isotope ( %x41-5A [ %x61-7A ] ) as element atom_suffix [ lewis_radicals ] [ ( 1*(%x30-39) ) as ring_closures ] atom_annotation ) as atom
+  ## core semantic fix over AsciiMath. Captured with the marker. The
+  ## combined form adds mhchem's left-subscript atomic number:
+  ## ^227_90Th carries isotope 227 AND atomic number 90. The atomic
+  ## number only arrives attached to a ^-mass prefix (the standalone
+  ## `_90Th` keeps its legacy isotope reading — never breaking); the
+  ## linter cross-checks the pair against the element's real Z.
+  prefixed_atom = ( [ lewis_prefix ] ( ( "^" / "_" ) 1*(%x30-39) ) as isotope [ ( "_" 1*(%x30-39) ) as atomic_number ] ( %x41-5A [ %x61-7A ] ) as element atom_suffix [ lewis_radicals ] [ ( 1*(%x30-39) ) as ring_closures ] atom_annotation ) as atom
 
   ## Bracket group: ( ... ) [ ... ] { ... } with optional multiplicity.
   group = ( group_open ( 1*( group_unit ) ) as group_nodes group_close [ ( "_" 1*(%x30-39) ) as multiplicity ] ) as group
@@ -224,6 +229,8 @@ grammar AsciiChemCore version "0.7.0" {
     accept "Fe(IV)"
     accept "_14C"
     accept "^14C"
+    accept "^227_90Th"
+    accept "^14C_6"
     accept "CC(=O)OC1=CC=CC=C1C(=O)O"
     accept "Ca^2+ + CO_3^2- -> CaCO_3"
     accept "(R)-CH_3CH(OH)COOH"

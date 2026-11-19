@@ -6,7 +6,28 @@ compiled artifact every runtime vendors. Verify your vendored copy
 against this file in CI; a mismatch means you drifted from the
 contract.
 
-## grammar-v0.7.0 (the current pin)
+## grammar-v0.8.0 (the current pin)
+
+| File | sha256 |
+|---|---|
+| `asciichem.parg` (the PARG text contract) | `81738c28a1c88ad7a77567ed6488c89160ad141ea33f28c040b8af41f39883c3` |
+| `asciichem.json` (the compiled artifact) | `86a62ebd000b4952a72aa0802be609a16b069e77a2bf888d87ffb609e47498df` |
+
+Artifact header: grammar `AsciiChemCore`, artifact version `0.8.0`,
+shape `parsanol-tree/v2`, binding_version 1.
+
+**The v0.8.0 change (asciichem-ruby#201 — the atomic-number prefix):**
+`prefixed_atom` gains an optional `atomic_number` capture — mhchem's
+left-subscript isotope component. `^227_90Th` carries isotope 227 AND
+atomic number 90. The atomic number only arrives attached to a
+`^`-mass prefix: the standalone `_90Th` keeps its legacy isotope
+reading (never breaking), and after the element the `_digits` suffix
+stays a subscript (`^14C_6` is six carbons-14). The linter
+cross-checks the pair against the element's real Z. Inline suite:
+two new accepts. Corpus parity: 295 fixtures, 0 mismatches. The lint
+baseline is unchanged (29 order-dependence advisories).
+
+## grammar-v0.7.0 (superseded)
 
 | File | sha256 |
 |---|---|
