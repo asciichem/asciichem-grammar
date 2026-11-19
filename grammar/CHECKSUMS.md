@@ -6,7 +6,32 @@ compiled artifact every runtime vendors. Verify your vendored copy
 against this file in CI; a mismatch means you drifted from the
 contract.
 
-## grammar-v0.8.0 (the current pin)
+## grammar-v0.9.0 (the current pin)
+
+| File | sha256 |
+|---|---|
+| `asciichem.parg` (the PARG text contract) | `ca9e69cccc5cfb044a2fb51b176afd88b92ec61bc1ccf1ea5c2acb56a6504ebc` |
+| `asciichem.json` (the compiled artifact) | `337468e78f7da6a8c989985b7150f0fe9ad138f2eaf395fba095b27643f46f4d` |
+
+Artifact header: grammar `AsciiChemCore`, artifact version `0.9.0`,
+shape `parsanol-tree/v2`, binding_version 1.
+
+**The v0.9.0 change (asciichem-ruby#202 — the adduct):** the new
+`adduct` formula_node alternative — the middle-dot connective
+between molecules at the FORMULA level. `CuSO4 . 5H2O` parses as one
+`adduct` node whose components carry the molecules (the coefficient
+carries each multiplicity; n-ary, mapping one-to-one onto the InChI
+multi-component layers). The ASCII spelling is the period with
+whitespace on both sides; the literal middle dot (·) is accepted as
+the mhchem alias. The UNspaced period stays radical-suffix territory
+(`Cl.` is one radical electron) — all three readings resolve by
+construction, no whitespace rule surprises. The canonical text emits
+the ASCII ` . ` form. The lint baseline moves 29 → 34
+order-dependence advisories (the new ordered-choice alternatives,
+the classification is ordered choice by design). Inline suite: three
+new accepts. Corpus parity: 300 fixtures, 0 mismatches.
+
+## grammar-v0.8.0 (superseded)
 
 | File | sha256 |
 |---|---|
