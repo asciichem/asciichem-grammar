@@ -6,7 +6,27 @@ compiled artifact every runtime vendors. Verify your vendored copy
 against this file in CI; a mismatch means you drifted from the
 contract.
 
-## grammar-v0.10.0 (the current pin)
+## grammar-v0.11.0 (the current pin)
+
+| File | sha256 |
+|---|---|
+| `asciichem.parg` (the PARG text contract) | 9c921ef7036640d2ef74368726599460a7281c9cdb22802ba0886748045d3d65 |
+| `asciichem.json` (the compiled artifact) | 934dfd953bcf5a6d9455520ab86a354f2e5eec74ebf8c01264503d39170853b5 |
+
+Artifact header: grammar `AsciiChemCore`, artifact version `0.11.0`,
+shape `parsanol-tree/v2`, binding_version 1.
+
+**The v0.11.0 change (asciichem-ruby#214 — the phase states):** the
+molecule production takes mhchem's tight parenthesised phase —
+`(aq)` / `(l)` / `(s)` / `(g)` — between the units and the state mark
+(`AgCl(s) v`; the phase is part of the formula, the mark is the
+annotation tail). Lowercase-only by construction: `Fe(s)` is solid
+iron while `Fe(S)` stays a sulfur group, and `(l)`/`(g)`/`(aq)` have
+no element readings. A spaced phase (`AgCl (aq)`) rejects — the mark
+vocabulary owns the spaced tail. Corpus parity: 313 fixtures, 0
+mismatches. Inline suite: six new accepts and one new reject.
+
+## grammar-v0.10.0 (superseded)
 
 | File | sha256 |
 |---|---|
