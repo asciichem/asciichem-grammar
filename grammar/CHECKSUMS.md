@@ -10,8 +10,8 @@ contract.
 
 | File | sha256 |
 |---|---|
-| `asciichem.parg` (the PARG text contract) | 56d393023fa924fbc66cc5bb1714b6b097833fd6c8075d24ea7a8e80e47703a1 |
-| `asciichem.json` (the compiled artifact) | 4f6c4fdecacbfff720dbdd755b4b5654effd4818390a57d5f4b5df3e2ec9ac01 |
+| `asciichem.parg` (the PARG text contract) | 2c3e11558c468f78a6995db41839cb18ccadb6a309d862fee10bbe398867e5cb |
+| `asciichem.json` (the compiled artifact) | a14d18c5a2e6b3d6ef8b21faf1af069601e2ae138ce27cce7bf63cd401fe9d8a |
 
 Artifact header: grammar `AsciiChemCore`, artifact version `0.11.0`,
 shape `parsanol-tree/v2`, binding_version 1.
