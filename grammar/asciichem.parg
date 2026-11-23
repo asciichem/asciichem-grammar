@@ -1,4 +1,4 @@
-grammar AsciiChemCore version "0.10.0" {
+grammar AsciiChemCore version "0.11.0" {
   ## The AsciiChem syntax — full grammar, DSL-shaped captures
   ## (P1b, asciichem-ruby#96). Capture names and nesting mirror
   ## GrammarRules exactly so the PARG tree adapts to the same shape
@@ -85,7 +85,16 @@ grammar AsciiChemCore version "0.10.0" {
   ## adjacent atom WITHOUT whitespace (`AgCl^14C`, `Ca^2+`). A tight
   ## `^2+`/`^14C` is therefore still the atom suffix; a separated
   ## ` ^` is the gas mark.
-  molecule = ( [ stereo_prefix ] [ coefficient ] ( 1*( unit / bond ) ) as units [ 1*( ws ) ( "v" / "^" ) as state ] ) as molecule
+  ## The phase spelling is tight to the units and PRECEDES the state
+  ## mark (the phase is part of the formula, the mark is the
+  ## annotation tail: `AgCl(s) v`). Lowercase-only, so the group
+  ## reading — element symbols are capitalised — can never collide:
+  ## `Fe(s)` is solid iron, `Fe(S)` a sulfur group; `(l)`/`(g)`/`(aq)`
+  ## have no element readings at all. A spaced phase (`AgCl (aq)`)
+  ## rejects: the mark vocabulary owns the spaced tail.
+  molecule = ( [ stereo_prefix ] [ coefficient ] ( 1*( unit / bond ) ) as units [ phase ] [ 1*( ws ) ( "v" / "^" ) as state ] ) as molecule
+
+  phase = ( "(" ( "aq" / "l" / "s" / "g" ) ")" ) as phase
 
   ## `(R)-` style prefixes; a/b are the alpha/beta shorthand.
   stereo_prefix = "(" ( stereo_letter ) as stereo ")" "-"
@@ -238,6 +247,13 @@ grammar AsciiChemCore version "0.10.0" {
     accept "A <=>+ B"
     accept "A <=>- B"
     accept "A <=>+[Fe] B"
+    accept "NaCl(aq)"
+    accept "H_2O(l)"
+    accept "Fe(s)"
+    accept "CO_2(g)"
+    accept "Ca(OH)_2(aq)"
+    accept "Ag^+ + Cl^- -> AgCl(s) v"
+    reject "AgCl (aq)"
     accept "A ->[heat] B ->[cool] C"
     accept "A -> B -> C -> D"
     accept "Ca(OH)_2"

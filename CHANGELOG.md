@@ -1,3 +1,11 @@
+## 0.11.0 — 2026-11-23
+
+- The molecule production takes mhchem's tight parenthesised phase —
+  `(aq)` / `(l)` / `(s)` / `(g)` — between the units and the state
+  mark. Collision-free by case (lowercase phases vs capitalised
+  element symbols); a spaced phase rejects. Closes the phase-states
+  half of asciichem-ruby#214. Artifact + checksums ride.
+
 ## 0.10.0 — 2026-11-23
 
 - The donation arrows `<=>+` / `<=>-` join `arrow_kind` (alternating
