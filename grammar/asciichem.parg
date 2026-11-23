@@ -1,4 +1,4 @@
-grammar AsciiChemCore version "0.9.0" {
+grammar AsciiChemCore version "0.10.0" {
   ## The AsciiChem syntax — full grammar, DSL-shaped captures
   ## (P1b, asciichem-ruby#96). Capture names and nesting mirror
   ## GrammarRules exactly so the PARG tree adapts to the same shape
@@ -60,7 +60,10 @@ grammar AsciiChemCore version "0.9.0" {
   ## arrow, conditions attach with no gap.
   arrow = ( [ 1*( ws ) ] ( arrow_kind ) as kind [ condition as above ] [ condition as below ] ) as arrow
 
-  arrow_kind = ( "<=>" / "<->" / "->" / "<-" )
+  ## mhchem's donation arrows carry the electron marker ON the
+  ## equilibrium (`<=>+` donates, `<=>-` removes); the decorated forms
+  ## alternate FIRST so `<=>` cannot consume their prefix.
+  arrow_kind = ( "<=>+" / "<=>-" / "<=>" / "<->" / "->" / "<-" )
 
   condition = ( "[" ( until "]" ) as text ( "]" ) as condition_close ) as condition
 
@@ -232,6 +235,9 @@ grammar AsciiChemCore version "0.9.0" {
     accept "CH_3-CH_2-OH"
     accept "2H_2 + O_2 -> 2H_2O"
     accept "N_2 + 3H_2 <=>[Fe][400C] 2NH_3"
+    accept "A <=>+ B"
+    accept "A <=>- B"
+    accept "A <=>+[Fe] B"
     accept "A ->[heat] B ->[cool] C"
     accept "A -> B -> C -> D"
     accept "Ca(OH)_2"
