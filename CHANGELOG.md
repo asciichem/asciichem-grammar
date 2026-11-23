@@ -1,3 +1,10 @@
+## 0.10.0 — 2026-11-23
+
+- The donation arrows `<=>+` / `<=>-` join `arrow_kind` (alternating
+  first; the decorated prefixes can no longer be consumed by `<=>`).
+  Closes the mis-parse hazard and the donation-arrow parity gap
+  tracked on asciichem-ruby#214. Artifact + checksums ride.
+
 # Changelog
 
 All notable changes to this project will be documented in this file.

@@ -6,7 +6,26 @@ compiled artifact every runtime vendors. Verify your vendored copy
 against this file in CI; a mismatch means you drifted from the
 contract.
 
-## grammar-v0.9.0 (the current pin)
+## grammar-v0.10.0 (the current pin)
+
+| File | sha256 |
+|---|---|
+| `asciichem.parg` (the PARG text contract) | 89fc34711880e6e304c810c6d877b26e0bb74bd50412fbcc746b484ec564ecf9 |
+| `asciichem.json` (the compiled artifact) | 0b3addd5da3e1d656514d1ea9d4ab8015f6263a1dc2df2227e35d323283a7211 |
+
+Artifact header: grammar `AsciiChemCore`, artifact version `0.10.0`,
+shape `parsanol-tree/v2`, binding_version 1.
+
+**The v0.10.0 change (asciichem-ruby#214 — the donation arrows):** the
+arrow kind alternation gains mhchem's `<=>+` (donation) and `<=>-`
+(removal), alternating FIRST so `<=>` cannot consume their prefix —
+previously `<=>-` silently mis-parsed as an equilibrium arrow plus a
+separate minus fragment (the round-trip masked the drift; the parse
+succeeded for something the author did not write). The donation kinds
+carry conditions (`A <=>+[Fe] B` parses). Corpus parity: 306
+fixtures, 0 mismatches. Inline suite: three new accepts.
+
+## grammar-v0.9.0 (superseded)
 
 | File | sha256 |
 |---|---|
