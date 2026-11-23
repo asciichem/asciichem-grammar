@@ -94,7 +94,7 @@ grammar AsciiChemCore version "0.11.0" {
   ## rejects: the mark vocabulary owns the spaced tail.
   molecule = ( [ stereo_prefix ] [ coefficient ] ( 1*( unit / bond ) ) as units [ phase ] [ 1*( ws ) ( "v" / "^" ) as state ] ) as molecule
 
-  phase = ( "(" ( "aq" / "l" / "s" / "g" ) ")" ) as phase
+  phase = ( "(" ( "aq" / "l" / "s" / "g" ) as phase ")" )
 
   ## `(R)-` style prefixes; a/b are the alpha/beta shorthand.
   stereo_prefix = "(" ( stereo_letter ) as stereo ")" "-"
